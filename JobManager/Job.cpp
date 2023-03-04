@@ -9,6 +9,8 @@ void Job::Start()
     Execute();
 
     m_bSuccessful = true;
+
+    OnFinish();
 }
 
 void Job::AddJobData(const std::shared_ptr<JobData> &jobData)
@@ -48,5 +50,4 @@ void Job::AddDependency(Job* pJob)
 {
     pJob->AddDependentJob(this);
     m_dependeciesCounter++;
-
 }

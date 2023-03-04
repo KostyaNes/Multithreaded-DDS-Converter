@@ -17,32 +17,32 @@
    <widget class="QComboBox" name="conversionModeComboBox">
     <property name="geometry">
      <rect>
-      <x>120</x>
+      <x>130</x>
       <y>20</y>
-      <width>69</width>
+      <width>51</width>
       <height>22</height>
      </rect>
     </property>
     <item>
      <property name="text">
-      <string>DXT1</string>
+      <string>BC1</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>DXT3</string>
+      <string>BC2</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>DXT5</string>
+      <string>BC3</string>
      </property>
     </item>
    </widget>
    <widget class="QComboBox" name="textureOrientationComboBox">
     <property name="geometry">
      <rect>
-      <x>300</x>
+      <x>310</x>
       <y>20</y>
       <width>69</width>
       <height>22</height>
@@ -69,7 +69,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Conversion mode:</string>
+     <string>Compression type:</string>
     </property>
    </widget>
    <widget class="QLabel" name="textureOrientationLabel">
@@ -191,6 +191,19 @@
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="runBenchmarkButton">
+    <property name="geometry">
+     <rect>
+      <x>450</x>
+      <y>60</y>
+      <width>91</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Run benchmark</string>
     </property>
    </widget>
   </widget>

@@ -9,15 +9,35 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    DDSConversion/Color32.cpp \
+    DDSConversion/DDSFunc.cpp \
+    DDSConversion/Jobs/ConvertImageJob.cpp \
+    DDSConversion/Jobs/ImageConversionJobData.cpp \
+    DDSConversion/Jobs/SplitImageJob.cpp \
+    DDSConversion/Textures/ImageTexel.cpp \
+    DDSConversion/Textures/ImageUtils.cpp \
+    DDSConversion/Textures/TextureBlock.cpp \
+    DDSConversion/Textures/TextureData.cpp \
     JobManager/Job.cpp \
     JobManager/JobManager.cpp \
     Widgets/MainWindow.cpp \
     main.cpp
 
 HEADERS += \
+    DDSConversion/Color32.h \
+    DDSConversion/DDSDefines.h \
+    DDSConversion/DDSFunc.h \
+    DDSConversion/Jobs/ConvertImageJob.h \
+    DDSConversion/Jobs/ImageConversionJobData.h \
+    DDSConversion/Jobs/SplitImageJob.h \
+    DDSConversion/Textures/ImageTexel.h \
+    DDSConversion/Textures/ImageUtils.h \
+    DDSConversion/Textures/TextureBlock.h \
+    DDSConversion/Textures/TextureData.h \
     JobManager/Job.h \
     JobManager/JobData.h \
     JobManager/JobManager.h \
+    ProjectDefines.h \
     Widgets/MainWindow.h
 
 FORMS += \
