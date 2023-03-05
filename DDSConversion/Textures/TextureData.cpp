@@ -23,8 +23,10 @@ void TextureData::ConvertDataCPU(std::vector<ImageTexel>& texelArray)
             m_blockData[index] = new BC1Block();
             break;
         case CompressionType::DXT3:
+            m_blockData[index] = new BC2Block();
             break;
         case CompressionType::DXT5:
+            m_blockData[index] = new BC3Block();
             break;
         default:
             break;

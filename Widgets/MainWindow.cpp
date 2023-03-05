@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     ui->textureOrientationLabel->setVisible(false);
     ui->textureOrientationComboBox->setVisible(false);
     ui->processingProgressBar->setVisible(false);

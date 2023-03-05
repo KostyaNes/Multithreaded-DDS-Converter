@@ -33,6 +33,35 @@ public:
 
 private:
     bool HasAlpha(const ImageTexel& texel);
-    uint32_t CalculateColorIndicesBC1a(const ImageTexel& texel, const Color32(&mainColors)[4]) const; // special case for 1-bit alpha
+    void CalculateContentIndicesBC1a(uint32_t& indices, const ImageTexel& texel, const Color32(&mainColors)[4]) const;
+};
+
+class BC2Block
+    : public TextureBlock
+{
+public:
+    virtual void Serialize(std::ofstream& fileStream) override;
+    virtual void ConvertDataFromTexel(const ImageTexel& texel) override;
+
+private:
+    void CalculateContentIndicesBC2(uint32_t& indices, uint64_t& alphaContent, const ImageTexel& texel, const Color32(&mainColors)[4]) const;
+
+private:
+    uint64_t m_alphaContent { 0 };
+};
+
+class BC3Block
+    : public TextureBlock
+{
+public:
+    virtual void Serialize(std::ofstream& fileStream) override;
+    virtual void ConvertDataFromTexel(const ImageTexel& texel) override;
+
+private:
+    void CalculateContentIndicesBC3(uint32_t& indices, uint64_t& alphaContent, const ImageTexel& texel, const Color32(&mainColors)[4], const int(&mainAlpha)[8]) const;
+    void GetMainColorsAndAlpha(const ImageTexel& texel, Color32& firstColor, Color32& secondColor, int& firstAlpha, int& secondAlpha) const;
+
+private:
+    uint64_t m_alphaContent { 0 };
 };
 
