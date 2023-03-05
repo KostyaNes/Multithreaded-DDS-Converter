@@ -19,16 +19,15 @@ void BC1Block::ConvertDataFromTexel(const ImageTexel& texel)
     m_firstColor = colors[0].GetRGB565();
     m_secondColor = colors[1].GetRGB565();
 
-    if (HasAlpha(texel))
+    if (HasAlpha(texel) || m_firstColor == m_secondColor)
     {
-        //if (m_firstColor > m_secondColor)
-        if (colors[0] > colors[1])
+        if (m_firstColor > m_secondColor)
         {
             std::swap(m_firstColor, m_secondColor);
             std::swap(colors[0], colors[1]);
         }
         colors[2] = Color32(colors[0].red * 1 / 2 + colors[1].red * 1 / 2, colors[0].green * 1 / 2
-            + colors[1].green * 1 / 2, colors[0].blue * 1 / 2 + colors[1].blue * 1 / 2);
+            + colors[1].green * 1 / 2, colors[0].blue * 1 / 2 + colors[1].blue * 1 / 2, 255);
         colors[3] = Color32(0, 0, 0, 0);
 
         m_indices = CalculateColorIndicesBC1a(texel, colors);
@@ -41,9 +40,9 @@ void BC1Block::ConvertDataFromTexel(const ImageTexel& texel)
             std::swap(colors[0], colors[1]);
         }
         colors[2] = Color32(colors[0].red * 2 / 3 + colors[1].red * 1 / 3, colors[0].green * 2 / 3
-            + colors[1].green * 1 / 3, colors[0].blue * 2 / 3 + colors[1].blue * 1 / 3);
+            + colors[1].green * 1 / 3, colors[0].blue * 2 / 3 + colors[1].blue * 1 / 3, 255);
         colors[3] = Color32(colors[0].red * 1 / 3 + colors[1].red * 2 / 3, colors[0].green * 1 / 3
-            + colors[1].green * 2 / 3, colors[0].blue * 1 / 3 + colors[1].blue * 2 / 3);
+            + colors[1].green * 2 / 3, colors[0].blue * 1 / 3 + colors[1].blue * 2 / 3, 255);
 
         m_indices = CalculateColorIndices(texel, colors);
     }

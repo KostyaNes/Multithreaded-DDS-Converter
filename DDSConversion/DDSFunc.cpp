@@ -12,7 +12,7 @@ void ConvertImagesIntoDDS(std::vector<std::pair<std::string, std::string>> image
 {
     auto start = std::chrono::steady_clock::now();
 
-    JobManager* jobManager = new JobManager();
+    JobManager jobManager;
     std::vector<std::shared_ptr<JobData>> jobsData;
     for (const auto& pair : imageFiles)
     {
@@ -24,12 +24,12 @@ void ConvertImagesIntoDDS(std::vector<std::pair<std::string, std::string>> image
         std::shared_ptr<Job> convertJob = std::make_shared<ConvertImageJob>(jobData);
         convertJob->AddDependency(splitJob.get());
 
-        jobManager->QueueJob(splitJob);
-        jobManager->QueueJob(convertJob);
+        jobManager.QueueJob(splitJob);
+        jobManager.QueueJob(convertJob);
     }
 
-    jobManager->Start();
-    jobManager->Stop();
+    jobManager.Start();
+    jobManager.Stop();
 
     for (const auto& data : jobsData)
     {
@@ -42,6 +42,4 @@ void ConvertImagesIntoDDS(std::vector<std::pair<std::string, std::string>> image
     auto end = std::chrono::steady_clock::now();
     auto diff = end - start;
     std::cout << "Job manager: " << std::chrono::duration<double, std::milli>(diff).count() << " ms" << std::endl;
-
-    delete jobManager;
 }
