@@ -13,6 +13,7 @@ SOURCES += \
     DDSConversion/DDSFunc.cpp \
     DDSConversion/Jobs/ConvertImageJob.cpp \
     DDSConversion/Jobs/ImageConversionJobData.cpp \
+    DDSConversion/Jobs/SaveTextureJob.cpp \
     DDSConversion/Jobs/SplitImageJob.cpp \
     DDSConversion/Textures/ImageTexel.cpp \
     DDSConversion/Textures/ImageUtils.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
     DDSConversion/Textures/TextureData.cpp \
     JobManager/Job.cpp \
     JobManager/JobManager.cpp \
+    JobManager/ThreadConfiguration.cpp \
     Widgets/MainWindow.cpp \
     main.cpp
 
@@ -29,6 +31,7 @@ HEADERS += \
     DDSConversion/DDSFunc.h \
     DDSConversion/Jobs/ConvertImageJob.h \
     DDSConversion/Jobs/ImageConversionJobData.h \
+    DDSConversion/Jobs/SaveTextureJob.h \
     DDSConversion/Jobs/SplitImageJob.h \
     DDSConversion/Textures/ImageTexel.h \
     DDSConversion/Textures/ImageUtils.h \
@@ -37,6 +40,7 @@ HEADERS += \
     JobManager/Job.h \
     JobManager/JobData.h \
     JobManager/JobManager.h \
+    JobManager/ThreadConfiguration.h \
     ProjectDefines.h \
     Widgets/MainWindow.h
 
