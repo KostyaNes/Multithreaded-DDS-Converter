@@ -1,5 +1,7 @@
 #pragma once
 
+#include <JobManager/ThreadConfiguration.h>
+
 #include <vector>
 #include <memory>
 #include <atomic>
@@ -15,6 +17,8 @@ public:
 
     void AddJobData(const std::shared_ptr<JobData>& jobData);
     JobData* GetJobData();
+
+    virtual ThreadAffinity GetAffinity();
 
     void AddDependency(Job* pJob);
 

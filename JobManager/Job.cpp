@@ -46,6 +46,11 @@ JobData* Job::GetJobData()
     return m_jobData.get();
 }
 
+ThreadAffinity Job::GetAffinity()
+{
+    return ThreadAffinity::Default;
+}
+
 void Job::AddDependency(Job* pJob)
 {
     pJob->AddDependentJob(this);

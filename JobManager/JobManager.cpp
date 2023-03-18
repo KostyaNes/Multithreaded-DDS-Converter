@@ -6,7 +6,7 @@ void JobManager::Start()
     m_threads.resize(num_threads);
     for (uint32_t i = 0; i < num_threads; i++)
     {
-        m_threads.at(i) = std::thread(&JobManager::ThreadLoop, this);
+        m_threads.at(i) = std::thread(&JobManager::ThreadLoop, this, i < m_threadsConfiguration.size() ? m_threadsConfiguration[i] : ThreadConfiguration());
     }
 }
 
@@ -14,7 +14,8 @@ void JobManager::QueueJob(const std::shared_ptr<Job> &job)
 {
     {
         std::unique_lock<std::mutex> lock(m_queueMutex);
-        m_jobs.push_back(job);
+        m_jobs[job->GetAffinity()].push_back(job);
+        m_jobsCount++;
     }
     //m_mutexCondition.notify_one();
 }
@@ -42,16 +43,26 @@ bool JobManager::IsBusy()
     return poolbusy;
 }
 
-void JobManager::ThreadLoop()
+void JobManager::AddThreadConfiguration(const ThreadConfiguration &configuration)
+{
+    m_threadsConfiguration.push_back(configuration);
+}
+
+void JobManager::SetupBasicConfigurationWithIOThread(JobManager &jobManager)
+{
+    jobManager.AddThreadConfiguration(ThreadConfiguration(ThreadAffinity::IO, /*bStrict*/ false));
+}
+
+void JobManager::ThreadLoop(const ThreadConfiguration &configuration)
 {
     while (true)
     {
         std::shared_ptr<Job> job = nullptr;
         {
             std::unique_lock<std::mutex> lock(m_queueMutex);
-            job = GetRunnableJob();
+            job = GetRunnableJob(configuration);
 
-            if (!job && m_bShouldTerminate && m_jobs.size() == 0)
+            if (!job && m_bShouldTerminate && m_jobsCount == 0)
             {
                 return;
             }
@@ -68,21 +79,54 @@ void JobManager::ThreadLoop()
     }
 }
 
-std::shared_ptr<Job> JobManager::GetRunnableJob()
+std::shared_ptr<Job> JobManager::GetRunnableJob(const ThreadConfiguration &configuration)
 {
     std::shared_ptr<Job> result = nullptr;
-    for (std::vector<std::shared_ptr<Job>>::iterator it = m_jobs.begin(); it != m_jobs.end();)
+    const auto& affinitiveJobs = m_jobs.find(configuration.GetAffinity());
+    if (affinitiveJobs != m_jobs.end())
     {
-        if ((*it)->IsReady())
+        for (std::vector<std::shared_ptr<Job>>::iterator it = affinitiveJobs->second.begin(); it != affinitiveJobs->second.end();)
         {
-            result = *it;
-            m_jobs.erase(it);
-            break;
+            if ((*it)->IsReady())
+            {
+                result = *it;
+                affinitiveJobs->second.erase(it);
+                break;
+            }
+            else
+            {
+                it++;
+            }
         }
-        else
+    }
+
+    if (!configuration.IsStrict() && !result)
+    {
+        for (ThreadAffinity affinity = ThreadAffinity::Default; affinity < ThreadAffinity::Strict; affinity = static_cast<ThreadAffinity>(static_cast<int>(affinity) + 1))
         {
-            it++;
+            const auto& affinitiveJobs = m_jobs.find(affinity);
+            if (affinitiveJobs != m_jobs.end())
+            {
+                for (std::vector<std::shared_ptr<Job>>::iterator it = affinitiveJobs->second.begin(); it != affinitiveJobs->second.end();)
+                {
+                    if ((*it)->IsReady())
+                    {
+                        result = *it;
+                        affinitiveJobs->second.erase(it);
+                        break;
+                    }
+                    else
+                    {
+                        it++;
+                    }
+                }
+            }
         }
+    }
+
+    if (result)
+    {
+        m_jobsCount--;
     }
 
     return result;
