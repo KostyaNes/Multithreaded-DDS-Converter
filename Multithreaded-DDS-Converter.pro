@@ -11,6 +11,7 @@ CONFIG += c++11
 SOURCES += \
     DDSConversion/Color32.cpp \
     DDSConversion/DDSFunc.cpp \
+    DDSConversion/Jobs/BatchJob.cpp \
     DDSConversion/Jobs/ConvertImageJob.cpp \
     DDSConversion/Jobs/ImageConversionJobData.cpp \
     DDSConversion/Jobs/SaveTextureJob.cpp \
@@ -29,6 +30,7 @@ HEADERS += \
     DDSConversion/Color32.h \
     DDSConversion/DDSDefines.h \
     DDSConversion/DDSFunc.h \
+    DDSConversion/Jobs/BatchJob.h \
     DDSConversion/Jobs/ConvertImageJob.h \
     DDSConversion/Jobs/ImageConversionJobData.h \
     DDSConversion/Jobs/SaveTextureJob.h \

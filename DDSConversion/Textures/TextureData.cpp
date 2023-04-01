@@ -2,20 +2,14 @@
 
 #include <DDSConversion/Textures/ImageUtils.h>
 
-TextureData::TextureData(CompressionType type, int height, int width)
+TextureData::TextureData(CompressionType type, int height, int width, int texelCount)
     : m_compressionType(type)
     , m_height(height)
     , m_width(width)
 {
+    m_blockData.resize(texelCount);
 
-}
-
-void TextureData::ConvertDataCPU(std::vector<ImageTexel>& texelArray)
-{
-    //assertm(texelArray.size() == m_blockData.size(), "Converted data is not allocated or invalid. Data should be prealocated in client's code!");
-    m_blockData.resize(texelArray.size());
-
-    for (size_t index = 0; index < texelArray.size(); index++)
+    for (int index = 0; index < texelCount; index++)
     {
         switch (m_compressionType)
         {
@@ -32,13 +26,30 @@ void TextureData::ConvertDataCPU(std::vector<ImageTexel>& texelArray)
             break;
         }
     }
+}
 
+TextureData::~TextureData()
+{
+    for (TextureBlock* pBlock : m_blockData)
+    {
+        delete pBlock;
+    }
+}
+
+void TextureData::ConvertDataCPU(std::vector<ImageTexel>& texelArray)
+{
     for (size_t i = 0; i < texelArray.size(); i++)
     {
         m_blockData[i]->ConvertDataFromTexel(texelArray[i]);
     }
+}
 
-    m_bDataReady = true;
+void TextureData::ConvertDataCPU(std::vector<ImageTexel> &texelArray, int texelBegin, int texelEnd)
+{
+    for (int i = texelBegin; i < texelEnd; i++)
+    {
+        m_blockData[i]->ConvertDataFromTexel(texelArray[i]);
+    }
 }
 
 void TextureData::Serialize(std::ofstream& fileStream)

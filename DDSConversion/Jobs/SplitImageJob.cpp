@@ -29,7 +29,7 @@ void SplitImageJob::Execute()
     ImageConversionJobData* jobData = reinterpret_cast<ImageConversionJobData*>(GetJobData());
 
     ConvertQImageToTexelArray(*m_sourceImage, jobData->m_texels);
-    jobData->m_outputData = new TextureData(jobData->m_compressionType, m_sourceImage->height(), m_sourceImage->width());
+    jobData->m_outputData = new TextureData(jobData->m_compressionType, m_sourceImage->height(), m_sourceImage->width(), jobData->m_texels.size());
 
     delete m_sourceImage;
     m_sourceImage = nullptr;
