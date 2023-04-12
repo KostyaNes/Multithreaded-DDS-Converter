@@ -10,6 +10,12 @@
 #define DDSCAPS_TEXTURE     0x1000
 #define DDPF_FOURCC         0x4
 
+enum class TextureOrientation
+{
+    DirectX,
+    OpenGL
+};
+
 enum class CompressionType
 {
     DXT1,
@@ -46,4 +52,18 @@ struct DDS_HEADER
     DWORD           dwCaps3{ 0 };
     DWORD           dwCaps4{ 0 };
     DWORD           dwReserved2{ 0 };
+};
+
+struct Texture
+{
+    ~Texture()
+    {
+        if (m_data)
+        {
+            delete[] m_data;
+        }
+    }
+
+    DDS_HEADER m_header;
+    char* m_data { nullptr };
 };

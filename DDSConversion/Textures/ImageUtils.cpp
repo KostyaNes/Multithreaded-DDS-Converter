@@ -5,28 +5,58 @@ Color32 CreateColor32FromQColor(const QColor& source)
     return Color32(source.red(), source.green(), source.blue(), source.alpha());
 }
 
-void ConvertQImageToTexelArray(const QImage& source, std::vector<ImageTexel>& texelArray)
+void ConvertQImageToTexelArray(const QImage& source, std::vector<ImageTexel>& texelArray, TextureOrientation textureOrientation)
 {
-    for (int i = 0; i < source.height(); i+=4)
+    if (textureOrientation == TextureOrientation::DirectX)
     {
-        for (int j = 0; j < source.width(); j+=4)
+        for (int i = 0; i < source.height(); i+=4)
         {
-            int pixelCount = 0;
-            texelArray.push_back(ImageTexel());
-
-            for (int y = i; y < i + 4; y++)
+            for (int j = 0; j < source.width(); j+=4)
             {
-                for (int x = j; x < j + 4; x++)
+                int pixelCount = 0;
+                texelArray.push_back(ImageTexel());
+
+                for (int y = i; y < i + 4; y++)
                 {
-                    if (y >= source.height() || x >= source.width())
+                    for (int x = j; x < j + 4; x++)
                     {
-                        texelArray.back().m_pixelData[pixelCount] = Color32(0, 0, 0, 0);
+                        if (y >= source.height() || x >= source.width())
+                        {
+                            texelArray.back().m_pixelData[pixelCount] = Color32(0, 0, 0, 0);
+                        }
+                        else
+                        {
+                            texelArray.back().m_pixelData[pixelCount] = CreateColor32FromQColor(source.pixelColor(x, y));
+                        }
+                        pixelCount++;
                     }
-                    else
+                }
+            }
+        }
+    }
+    else
+    {
+        for (int i = source.height() - 1; i >= 0; i-=4)
+        {
+            for (int j = 0; j < source.width(); j+=4)
+            {
+                int pixelCount = 0;
+                texelArray.push_back(ImageTexel());
+
+                for (int y = i; y > i - 4; y--)
+                {
+                    for (int x = j; x < j + 4; x++)
                     {
-                        texelArray.back().m_pixelData[pixelCount] = CreateColor32FromQColor(source.pixelColor(x, y));
+                        if (y < 0 || x >= source.width())
+                        {
+                            texelArray.back().m_pixelData[pixelCount] = Color32(0, 0, 0, 0);
+                        }
+                        else
+                        {
+                            texelArray.back().m_pixelData[pixelCount] = CreateColor32FromQColor(source.pixelColor(x, y));
+                        }
+                        pixelCount++;
                     }
-                    pixelCount++;
                 }
             }
         }

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DDSPreviewerWidget</class>
+ <widget class="QWidget" name="DDSPreviewerWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>338</width>
+    <height>369</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QComboBox" name="textureOrientationComboBox">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>10</y>
+     <width>69</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>DirectX</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>OpenGL</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLabel" name="textureOrientationLabel">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>101</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Texture orientation:</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

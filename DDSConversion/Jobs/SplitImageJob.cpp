@@ -28,7 +28,7 @@ void SplitImageJob::Execute()
     assertm(GetJobData(), "ImageConversionJobData has to be set prior to job execution");
     ImageConversionJobData* jobData = reinterpret_cast<ImageConversionJobData*>(GetJobData());
 
-    ConvertQImageToTexelArray(*m_sourceImage, jobData->m_texels);
+    ConvertQImageToTexelArray(*m_sourceImage, jobData->m_texels, jobData->m_textureOrientation);
     jobData->m_outputData = new TextureData(jobData->m_compressionType, m_sourceImage->height(), m_sourceImage->width(), jobData->m_texels.size());
 
     delete m_sourceImage;

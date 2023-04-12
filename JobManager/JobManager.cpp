@@ -17,7 +17,6 @@ void JobManager::QueueJob(const std::shared_ptr<Job> &job)
         m_jobs[job->GetAffinity()].push_back(job);
         m_jobsCount++;
     }
-    //m_mutexCondition.notify_one();
 }
 
 void JobManager::Stop()
@@ -26,7 +25,7 @@ void JobManager::Stop()
         std::unique_lock<std::mutex> lock(m_queueMutex);
         m_bShouldTerminate = true;
     }
-    //m_mutexCondition.notify_all();
+
     for (std::thread& activeThread : m_threads) {
         activeThread.join();
     }

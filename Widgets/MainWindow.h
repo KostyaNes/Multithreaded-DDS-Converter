@@ -3,6 +3,8 @@
 #include <QMainWindow>
 #include <DDSConversion/DDSDefines.h>
 
+class QTableWidgetItem;
+
 namespace Ui {
 class MainWindow;
 }
@@ -17,6 +19,11 @@ public:
 
 private:
     CompressionType GetCurrentCompressionType();
+    TextureOrientation GetCurrentTextureOrientation();
+
+    void AddProcessedTextures(std::vector<std::pair<std::string, std::string>> imageFiles);
+
+    void DisplayPreviewerWidget(QString filePath);
 
 private slots:
     void on_runBenchmarkButton_clicked();
@@ -24,6 +31,10 @@ private slots:
     void on_convertImageButton_clicked();
 
     void on_convertFolderButton_clicked();
+
+    void on_processedTexturesTable_cellDoubleClicked(int row, int column);
+
+    void on_openTextureButton_clicked();
 
 private:
     Ui::MainWindow *ui;

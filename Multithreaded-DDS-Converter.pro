@@ -23,7 +23,9 @@ SOURCES += \
     JobManager/Job.cpp \
     JobManager/JobManager.cpp \
     JobManager/ThreadConfiguration.cpp \
+    Widgets/DDSPreviewerWidget.cpp \
     Widgets/MainWindow.cpp \
+    Widgets/OpenGLWidget.cpp \
     main.cpp
 
 HEADERS += \
@@ -44,9 +46,12 @@ HEADERS += \
     JobManager/JobManager.h \
     JobManager/ThreadConfiguration.h \
     ProjectDefines.h \
-    Widgets/MainWindow.h
+    Widgets/DDSPreviewerWidget.h \
+    Widgets/MainWindow.h \
+    Widgets/OpenGLWidget.h
 
 FORMS += \
+    Widgets/DDSPreviewerWidget.ui \
     Widgets/MainWindow.ui
 
 # Default rules for deployment.

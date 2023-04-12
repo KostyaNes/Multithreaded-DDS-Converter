@@ -88,7 +88,7 @@
      <string>Texture orientation:</string>
     </property>
    </widget>
-   <widget class="QTableWidget" name="processedAssetsTable">
+   <widget class="QTableWidget" name="processedTexturesTable">
     <property name="geometry">
      <rect>
       <x>30</x>
@@ -207,6 +207,19 @@
     </property>
     <property name="text">
      <string>Run benchmark</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="openTextureButton">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>60</y>
+      <width>91</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Open Texture</string>
     </property>
    </widget>
   </widget>

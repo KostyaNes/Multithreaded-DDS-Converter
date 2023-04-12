@@ -1,10 +1,11 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
+#include <DDSConversion/DDSFunc.h>
+#include <Widgets/DDSPreviewerWidget.h>
+
 #include <QDir>
 #include <QFileDialog>
-
-#include <DDSConversion/DDSFunc.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -12,9 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->textureOrientationLabel->setVisible(false);
-    ui->textureOrientationComboBox->setVisible(false);
     ui->processingProgressBar->setVisible(false);
+    ui->processedTexturesTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
 }
 
 MainWindow::~MainWindow()
@@ -25,6 +25,34 @@ MainWindow::~MainWindow()
 CompressionType MainWindow::GetCurrentCompressionType()
 {
     return static_cast<CompressionType>(ui->conversionModeComboBox->currentIndex());
+}
+
+TextureOrientation MainWindow::GetCurrentTextureOrientation()
+{
+    return static_cast<TextureOrientation>(ui->textureOrientationComboBox->currentIndex());
+}
+
+void MainWindow::AddProcessedTextures(std::vector<std::pair<std::string, std::string>> imageFiles)
+{
+    for (const auto& entry : imageFiles)
+    {
+        QTableWidgetItem* pItemAssetPath = new QTableWidgetItem(entry.second.c_str());
+        QTableWidgetItem* pItemCompressionType = new QTableWidgetItem(ui->conversionModeComboBox->currentText());
+
+        ui->processedTexturesTable->insertRow(this->ui->processedTexturesTable->rowCount());
+
+        ui->processedTexturesTable->setItem(this->ui->processedTexturesTable->rowCount() - 1, 0, pItemAssetPath);
+        ui->processedTexturesTable->setItem(this->ui->processedTexturesTable->rowCount() - 1, 1, pItemCompressionType);
+    }
+}
+
+void MainWindow::DisplayPreviewerWidget(QString filePath)
+{
+    DDSPreviewerWidget* widget = new DDSPreviewerWidget();
+    widget->setAttribute(Qt::WA_DeleteOnClose);
+    widget->SetTexture(filePath, GetCurrentTextureOrientation());
+    widget->setWindowTitle("DDS Previewer: " + QString(filePath));
+    widget->show();
 }
 
 void MainWindow::on_runBenchmarkButton_clicked()
@@ -49,7 +77,9 @@ void MainWindow::on_runBenchmarkButton_clicked()
             imagesPath.push_back({inputFolder.absoluteFilePath(image).toStdString(), outputFileName.toStdString()});
         }
 
-        ConvertImagesIntoDDS(imagesPath, GetCurrentCompressionType());
+        ConvertImagesIntoDDS(imagesPath, GetCurrentCompressionType(), GetCurrentTextureOrientation());
+
+        AddProcessedTextures(imagesPath);
     }
 }
 
@@ -63,7 +93,9 @@ void MainWindow::on_convertImageButton_clicked()
 
         if(!outputTextureName.isEmpty()&& !outputTextureName.isNull())
         {
-            ConvertImagesIntoDDS({{inputImageName.toStdString(), outputTextureName.toStdString()}}, GetCurrentCompressionType());
+            ConvertImagesIntoDDS({{inputImageName.toStdString(), outputTextureName.toStdString()}}, GetCurrentCompressionType(), GetCurrentTextureOrientation());
+
+            AddProcessedTextures({{inputImageName.toStdString(), outputTextureName.toStdString()}});
         }
     }
 }
@@ -91,7 +123,28 @@ void MainWindow::on_convertFolderButton_clicked()
                 imagesPath.push_back({inputFolder.absoluteFilePath(image).toStdString(), outputFileName.toStdString()});
             }
 
-            ConvertImagesIntoDDS(imagesPath, GetCurrentCompressionType());
+            ConvertImagesIntoDDS(imagesPath, GetCurrentCompressionType(), GetCurrentTextureOrientation());
+
+            AddProcessedTextures(imagesPath);
         }
+    }
+}
+
+void MainWindow::on_processedTexturesTable_cellDoubleClicked(int row, int column)
+{
+    if (column == 0) // only handle if double clicked on asset path column
+    {
+        QTableWidgetItem* pItem = ui->processedTexturesTable->item(row, column);
+        DisplayPreviewerWidget(pItem->text());
+    }
+}
+
+void MainWindow::on_openTextureButton_clicked()
+{
+    QString inputImageName = QFileDialog::getOpenFileName(this, tr("Open Texture"), "", tr("Texture (*.dds)"));
+
+    if(!inputImageName.isEmpty() && !inputImageName.isNull())
+    {
+        DisplayPreviewerWidget(inputImageName);
     }
 }
