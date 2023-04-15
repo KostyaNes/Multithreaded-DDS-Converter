@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     ui->processingProgressBar->setVisible(false);
+    ui->runBenchmarkButton->setVisible(false);
     ui->processedTexturesTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
 }
 

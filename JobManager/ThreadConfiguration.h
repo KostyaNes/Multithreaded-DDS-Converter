@@ -3,8 +3,8 @@
 enum class ThreadAffinity
 {
     Default = 0,
-    IO,
     Strict, // Put all affinity types that should be executed only in specialized thread after this
+    IO,
     Count // Add new affinity types before this
 };
 
