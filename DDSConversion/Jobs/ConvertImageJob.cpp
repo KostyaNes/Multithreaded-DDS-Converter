@@ -22,5 +22,12 @@ void ConvertImageJob::Execute()
     ImageConversionJobData* jobData = reinterpret_cast<ImageConversionJobData*>(GetJobData());
 
     assertm(jobData->m_outputData, "Output data should be created prior to this job execution");
-    jobData->m_outputData->ConvertDataCPU(jobData->m_texels);
+    if (m_texelBegin == m_texelEnd && m_texelEnd == 0)
+    {
+        jobData->m_outputData->ConvertDataCPU(jobData->m_texels);
+    }
+    else
+    {
+        jobData->m_outputData->ConvertDataCPU(jobData->m_texels, m_texelBegin, m_texelEnd);
+    }
 }

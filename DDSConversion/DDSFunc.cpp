@@ -35,14 +35,42 @@ void CreateJobForImageConversion(JobManager &jobManager, std::string &inputFile,
 
     std::shared_ptr<Job> splitJob = std::make_shared<SplitImageJob>(inputFile, jobData);
 
+    /*
     std::shared_ptr<Job> convertJob = std::make_shared<ConvertImageJob>(jobData);
     convertJob->AddDependency(splitJob.get());
+    */
+
+    /*
+    std::shared_ptr<Job> convertJobFirst = std::make_shared<ConvertImageJob>(jobData, 0, 524288);
+    convertJobFirst->AddDependency(splitJob.get());
+    std::shared_ptr<Job> convertJobSecond = std::make_shared<ConvertImageJob>(jobData, 524288, 1048576);
+    convertJobSecond->AddDependency(splitJob.get());
 
     std::shared_ptr<Job> saveTextureJob = std::make_shared<SaveTextureJob>(jobData);
-    saveTextureJob->AddDependency(convertJob.get());
+    saveTextureJob->AddDependency(convertJobFirst.get());
+    saveTextureJob->AddDependency(convertJobSecond.get());
+    */
+
+    std::shared_ptr<Job> convertJob1 = std::make_shared<ConvertImageJob>(jobData, 0, 262144);
+    convertJob1->AddDependency(splitJob.get());
+    std::shared_ptr<Job> convertJob2 = std::make_shared<ConvertImageJob>(jobData, 262144, 524288);
+    convertJob2->AddDependency(splitJob.get());
+    std::shared_ptr<Job> convertJob3 = std::make_shared<ConvertImageJob>(jobData, 524288, 786432);
+    convertJob3->AddDependency(splitJob.get());
+    std::shared_ptr<Job> convertJob4 = std::make_shared<ConvertImageJob>(jobData, 786432, 1048576);
+    convertJob4->AddDependency(splitJob.get());
+
+    std::shared_ptr<Job> saveTextureJob = std::make_shared<SaveTextureJob>(jobData);
+    saveTextureJob->AddDependency(convertJob1.get());
+    saveTextureJob->AddDependency(convertJob2.get());
+    saveTextureJob->AddDependency(convertJob3.get());
+    saveTextureJob->AddDependency(convertJob4.get());
 
     jobManager.QueueJob(splitJob);
-    jobManager.QueueJob(convertJob);
+    jobManager.QueueJob(convertJob1);
+    jobManager.QueueJob(convertJob2);
+    jobManager.QueueJob(convertJob3);
+    jobManager.QueueJob(convertJob4);
     jobManager.QueueJob(saveTextureJob);
 }
 
