@@ -5,6 +5,7 @@
 #include <DDSConversion/Jobs/ConvertImageJob.h>
 #include <DDSConversion/Jobs/SplitImageJob.h>
 #include <DDSConversion/Jobs/SaveTextureJob.h>
+#include <DDSConversion/Jobs/BatchJob.h>
 #include <DDSConversion/Jobs/ImageConversionJobData.h>
 
 #include <iostream>
@@ -31,6 +32,7 @@ void ConvertImagesIntoDDS(std::vector<std::pair<std::string, std::string>> image
 
 void CreateJobForImageConversion(JobManager &jobManager, std::string &inputFile, std::string &outputFile, CompressionType type, TextureOrientation textureOrientation)
 {
+    std::shared_ptr<BatchJob> batchJob = std::make_shared<BatchJob>();
     std::shared_ptr<ImageConversionJobData> jobData = std::make_shared<ImageConversionJobData>(inputFile, outputFile, type, textureOrientation);
 
     std::shared_ptr<Job> splitJob = std::make_shared<SplitImageJob>(inputFile, jobData);
@@ -41,9 +43,15 @@ void CreateJobForImageConversion(JobManager &jobManager, std::string &inputFile,
     std::shared_ptr<Job> saveTextureJob = std::make_shared<SaveTextureJob>(jobData);
     saveTextureJob->AddDependency(convertJob.get());
 
+    /*
     jobManager.QueueJob(splitJob);
     jobManager.QueueJob(convertJob);
     jobManager.QueueJob(saveTextureJob);
+    */
+    batchJob->AddJobToBatch(splitJob);
+    batchJob->AddJobToBatch(convertJob);
+    batchJob->AddJobToBatch(saveTextureJob);
+    jobManager.QueueJob(batchJob);
 }
 
 void ReadDDSTexture(std::string filePath, Texture& outTexture)

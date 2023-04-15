@@ -6,7 +6,7 @@ class BatchJob
     : public Job
 {
 public:
-    void AddJob(std::shared_ptr<Job>& job);
+    void AddJobToBatch(std::shared_ptr<Job>& job);
 
 private:
     virtual void Execute() override;
