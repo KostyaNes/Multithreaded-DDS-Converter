@@ -9,7 +9,7 @@
 
 namespace Shaders
 {
-    const char *vertexShader =
+    const char *VertexShader =
       "#ifdef GL_ES\n"
       "// Set default precision to medium\n"
       "precision mediump int;\n"
@@ -33,7 +33,7 @@ namespace Shaders
       "  v_texcoord = a_texcoord;\n"
       "}\n";
 
-    const char *fragmentShader =
+    const char *DirectXFragmentShader =
       "#ifdef GL_ES\n"
       "// Set default precision to medium\n"
       "precision mediump int;\n"
@@ -56,7 +56,7 @@ namespace Shaders
       "#endif // 0\n"
       "}\n";
 
-    const char *flippedFragmentShader =
+    const char *OpenGLFragmentShader =
       "#ifdef GL_ES\n"
       "// Set default precision to medium\n"
       "precision mediump int;\n"
@@ -128,21 +128,21 @@ void OpenGLWidget::paintGL()
 
 void OpenGLWidget::initShaders()
 {
-    if (!_qGLSProg.addShaderFromSourceCode(QOpenGLShader::Vertex, QString::fromLatin1(Shaders::vertexShader)))
+    if (!_qGLSProg.addShaderFromSourceCode(QOpenGLShader::Vertex, QString::fromLatin1(Shaders::VertexShader)))
     {
       parentWidget()->hide();
     }
 
     if (m_textureOrientation == TextureOrientation::OpenGL)
     {
-      if (!_qGLSProg.addShaderFromSourceCode(QOpenGLShader::Fragment, QString::fromLatin1(Shaders::flippedFragmentShader)))
+      if (!_qGLSProg.addShaderFromSourceCode(QOpenGLShader::Fragment, QString::fromLatin1(Shaders::OpenGLFragmentShader)))
       {
           parentWidget()->hide();
       }
     }
     else
     {
-      if (!_qGLSProg.addShaderFromSourceCode(QOpenGLShader::Fragment, QString::fromLatin1(Shaders::fragmentShader)))
+      if (!_qGLSProg.addShaderFromSourceCode(QOpenGLShader::Fragment, QString::fromLatin1(Shaders::DirectXFragmentShader)))
       {
           parentWidget()->hide();
       }
